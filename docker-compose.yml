@@ -21,9 +21,9 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: teatro
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: camilo
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: admin.root
     ports:
       - 33069:3306
     volumes:
@@ -44,7 +44,17 @@ services:
       - .:/var/www/html
     networks:
       - networkapp
-
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mysql
+    depends_on:
+      - mysql
+    networks:
+      - networkapp
 networks:
   networkapp:
 
