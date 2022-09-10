@@ -34,8 +34,11 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-success" aria-current="page" href="#">Mis Reservaciones</a>
-                          </li>
+                            <a class="nav-link btn btn-outline-success mx-2" aria-current="page" href="#">Mis Reservaciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-success" aria-current="page" href="#">Nuevo Usuario</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -75,6 +78,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col">
+                      @include('layouts.notify')
                         <div class="card shadow rounded">
                             <div class="card-body">
                                 @yield('content_sys')
