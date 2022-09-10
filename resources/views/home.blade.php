@@ -1,23 +1,30 @@
-@extends('layouts.app')
+@extends('layouts.app_system')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
+@section('content_sys')
+    <div class="card-header bg-dark text-white my-2 shadow rounded">Dashboard</div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-dark table-striped caption-top">
+                <caption>Listado de Funciones</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Función</th>
+                    <th scope="col">Fecha de Inicio</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    @foreach ($theaters as $th )
+                    <tr>
+                        <td>{{$th->name}}</td>
+                        <td>{{$th->created_at}}</td>
+                        <td>
+                            <a href="" class="btn btn-info">Ver</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+              </table>
         </div>
     </div>
-</div>
 @endsection
