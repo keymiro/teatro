@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,7 +21,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate(15);
+
         return view('user.index')->with(compact('users'));
+
     }
 
     /**
@@ -39,16 +42,17 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         try{
+
             User::create($request->all());
 
             return back()->with('notification','Registro creado correctamente');
 
         } catch (Exception $e) {
 
-            return back()->with('error', $e);
+            return back()->with('error', $e->getMessage());;
         }
     }
 
@@ -67,7 +71,7 @@ class UserController extends Controller
 
         } catch (Exception $e) {
 
-            return back()->with('error', $e);
+            return back()->with('error', $e->getMessage());;
         }
     }
 
@@ -87,7 +91,7 @@ class UserController extends Controller
 
         } catch (Exception $e) {
 
-            return back()->with('error', $e);
+            return back()->with('error', $e->getMessage());;
         }
     }
 
@@ -98,7 +102,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUserRequest $request, $id)
     {
         try{
             $user = User::findOrFail($id);
@@ -108,7 +112,7 @@ class UserController extends Controller
 
         } catch (Exception $e) {
 
-            return back()->with('error', $e);
+            return back()->with('error', $e->getMessage());;
         }
     }
 
@@ -125,11 +129,11 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $user->delete();
 
-            return back()->with('notification','Carpeta eliminada correctamente');
+            return back()->with('notification','registro eliminado correctamente');
 
         } catch (Exception $e) {
 
-            return back()->with('error', $e);
+            return back()->with('error', $e->getMessage());;
         }
     }
 }
