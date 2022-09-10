@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Reservation;
+use App\Models\Theater;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+       $this->call(UserSeeder::class);
+       $this->call(TheaterSeeder::class);
+       $this->call(ReservationSeeder::class);
     }
 }
