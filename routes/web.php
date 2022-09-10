@@ -19,6 +19,10 @@ use App\Http\Controllers\WelcomeController;
 
 Auth::routes(['register' => false]);
 
+Route::middleware(['blocked'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+});
+
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+
