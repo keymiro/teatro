@@ -6,9 +6,19 @@ use Exception;
 use App\Models\Theater;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreReservationRequest;
 
 class ReservationController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,23 +44,29 @@ class ReservationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreReservationRequest $request)
     {
         try{
 
-           $code = $this->code(15);
-           $seats = $request->input('seat');
+           $seats        = $request->input('seat');
+           $theater_id   = $request->input('theater_id');
+           $code         = $this->generateCode(15);
+           $noRepeatSeat = $this->validationNoRepeatSeat($seats,$theater_id);
 
-        foreach ($seats as $key => $seat)
-        {
-            Reservation::create([
-                'code'      =>$code,
-                'seat'      =>$seats[$key],
-                'theater_id'=>$request->input('theater_id'),
-                'user_id'   =>auth()->user()->id,
-            ]);
-        }
+           if($noRepeatSeat){
 
+                return back()->with('error', 'Las butacas: '.$noRepeatSeat.' ya estan reservadas');
+           }
+
+            foreach ($seats as $key => $seat)
+            {
+                Reservation::create([
+                    'code'      =>$code,
+                    'seat'      =>$seats[$key],
+                    'theater_id'=>$theater_id,
+                    'user_id'   =>auth()->user()->id,
+                ]);
+            }
 
             return back()->with('notification', 'Registro guardado correctamente');
 
@@ -86,7 +102,7 @@ class ReservationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(StoreReservationRequest $request,$id)
     {
         //
     }
@@ -100,7 +116,12 @@ class ReservationController extends Controller
     {
         //
     }
-    public function code($longitud) {
+
+    /**
+     * Genera un código ramdon sin repetirse para la reserva
+     *
+     */
+    public function generateCode($longitud) {
 
         $key = '';
         $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
@@ -109,5 +130,32 @@ class ReservationController extends Controller
         for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
 
         return 'cod_'.$key;
+    }
+
+    /**
+     * Valida que no puedan  repetir la misma butaca en una misma función
+     *
+     */
+    public function validationNoRepeatSeat(array $seats,$theater_id){
+
+        $seatRepeat = [];
+
+        foreach ($seats as $key => $value) {
+            $reservation = Reservation::where([
+                                                ['theater_id', '=', $theater_id],
+                                                ['seat', '=', $seats[$key]],
+                                             ])->get();
+                if (count($reservation)>0) {
+
+                    $seatRepeat[] = $seats[$key];
+                }
+        }
+
+        if (!empty($seatRepeat)) {
+
+            return implode(", ", $seatRepeat);
+        }
+
+        return false;
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app_system')
 
 @section('content_sys')
-    <div class="card-header bg-dark text-white my-2 shadow rounded">Dashboard</div>
+    <div class="card-header bg-dark text-white my-2 shadow rounded">Listado de Socios</div>
     <div class="row">
         <div class="col">
             <table class="table table-dark table-striped caption-top">
