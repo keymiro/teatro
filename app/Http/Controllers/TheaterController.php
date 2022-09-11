@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Theater;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,18 @@ class TheaterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        try{
+
+            $theater = Theater::findOrFail($id);
+
+            return view('reservation.index')->with(compact('theater'));
+
+        } catch (Exception $e) {
+
+            return back()->with('error', $e->getMessage());;
+        }
     }
 
     /**
@@ -41,10 +51,9 @@ class TheaterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Theater  $theater
      * @return \Illuminate\Http\Response
      */
-    public function show(Theater $theater)
+    public function show($id)
     {
         //
     }
@@ -52,10 +61,9 @@ class TheaterController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Theater  $theater
      * @return \Illuminate\Http\Response
      */
-    public function edit(Theater $theater)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +72,9 @@ class TheaterController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Theater  $theater
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Theater $theater)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +82,9 @@ class TheaterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Theater  $theater
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Theater $theater)
+    public function destroy($id)
     {
         //
     }

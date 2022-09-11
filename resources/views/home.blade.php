@@ -19,7 +19,7 @@
                         <td>{{$th->name}}</td>
                         <td>{{$th->created_at}}</td>
                         <td>
-                            <a href="" class="btn btn-info">Ver</a>
+                            <a href="{{route('theaters.index',$th->id)}}" class="btn btn-info">Ver</a>
                         </td>
                     </tr>
                     @endforeach
