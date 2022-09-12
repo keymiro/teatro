@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Theater;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreReservationRequest;
+use Illuminate\Validation\Rules\Unique;
 
 class ReservationController extends Controller
 {
@@ -26,6 +26,10 @@ class ReservationController extends Controller
      */
     public function index()
     {
+        $reservation = Reservation::where('user_id',auth()->user()->id)->get();
+        $reservations = $reservation->unique('code');
+
+        return view('reservation.index')->with(compact('reservations'));
     }
 
     /**
@@ -50,7 +54,7 @@ class ReservationController extends Controller
 
            $seats        = $request->input('seat');
            $theater_id   = $request->input('theater_id');
-           $code         = $this->generateCode(15);
+           $code         = $this->generateCode(5);
            $noRepeatSeat = $this->validationNoRepeatSeat($seats,$theater_id);
 
            if($noRepeatSeat){
@@ -93,7 +97,17 @@ class ReservationController extends Controller
      */
     public function edit($id)
     {
-        //
+        try{
+
+             $reservations = Reservation::where('code',$id)->get();
+             $otherSeats = Reservation::where('code','!=',$id)->where('theater_id',$reservations[0]->theater_id)->get();
+
+            return view('reservation.edit')->with(compact('reservations','otherSeats'));
+
+        } catch (Exception $e) {
+
+            return back()->with('error', $e->getMessage());;
+        }
     }
 
     /**
@@ -104,7 +118,36 @@ class ReservationController extends Controller
      */
     public function update(StoreReservationRequest $request,$id)
     {
-        //
+        try{
+            $this->destroy($request->input('code'));
+
+            $seats        = $request->input('seat');
+            $theater_id   = $request->input('theater_id');
+
+            $noRepeatSeat = $this->validationNoRepeatSeat($seats,$theater_id);
+
+           if($noRepeatSeat){
+
+                return back()->with('error', 'Las butacas: '.$noRepeatSeat.' ya estan reservadas');
+           }
+
+            foreach ($seats as $key => $seat)
+            {
+
+                Reservation::create([
+                    'code'      =>$request->input('code'),
+                    'seat'      =>$seats[$key],
+                    'theater_id'=>$theater_id,
+                    'user_id'   =>auth()->user()->id,
+                ]);
+            }
+
+            return back()->with('notification', 'Registro actualizado correctamente');
+
+         } catch (Exception $e) {
+
+             return back()->with('error', $e->getMessage());
+         }
     }
 
     /**
@@ -114,7 +157,17 @@ class ReservationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+            $user = Reservation::where('code',$id);
+            $user->delete();
+
+            return back()->with('notification','registro eliminado correctamente');
+
+        } catch (Exception $e) {
+
+            return back()->with('error', $e->getMessage());;
+        }
     }
 
     /**
@@ -129,7 +182,7 @@ class ReservationController extends Controller
 
         for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
 
-        return 'cod_'.$key;
+        return strtoupper('cod_'.$key);
     }
 
     /**
@@ -145,6 +198,7 @@ class ReservationController extends Controller
                                                 ['theater_id', '=', $theater_id],
                                                 ['seat', '=', $seats[$key]],
                                              ])->get();
+
                 if (count($reservation)>0) {
 
                     $seatRepeat[] = $seats[$key];

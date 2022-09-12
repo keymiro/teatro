@@ -35,17 +35,17 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{{route('home')}}">Funciones</a>
+                            <a class="nav-link {{request()->is('home')? 'active':'' }}" aria-current="page" href="{{route('home')}}">Funciones</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Mis Reservaciones</a>
+                            <a class="nav-link {{request()->is('reservations')? 'active':'' }}" aria-current="page" href="{{route('reservations.index')}}">Mis Reservaciones</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                              Socios
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <li><a class="dropdown-item" href="{{route('users.index')}}">Listar</a></li>
+                              <li><a class="dropdown-item " href="{{route('users.index')}}">Listar</a></li>
                               <li><a class="dropdown-item" href="{{route('users.create')}}">Nuevo</a></li>
                             </ul>
                           </li>

@@ -28,9 +28,9 @@ class TheaterController extends Controller
         try{
 
             $theater = Theater::findOrFail($id);
-            $reservatios = Reservation::where('theater_id',$id)->get();
+            $reservations = Reservation::where('theater_id',$id)->get();
 
-            return view('reservation.index')->with(compact('theater','reservatios'));
+            return view('theater.index')->with(compact('theater','reservations'));
 
         } catch (Exception $e) {
 

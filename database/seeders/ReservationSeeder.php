@@ -15,7 +15,7 @@ class ReservationSeeder extends Seeder
     public function run()
     {
         DB::table('reservations')->insert([
-            'code'          =>'A1',
+            'code'          =>'COD_E68A1',
             'seat'          =>'2-3',
             'theater_id'   =>1,
             'user_id'       =>1,
@@ -23,7 +23,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'A1',
+            'code'          =>'COD_E68A1',
             'seat'          =>'2-4',
             'theater_id'   =>1,
             'user_id'       =>1,
@@ -31,7 +31,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'A1',
+            'code'          =>'COD_E68A1',
             'seat'          =>'4-10',
             'theater_id'   =>1,
             'user_id'       =>1,
@@ -39,7 +39,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'A2',
+            'code'          =>'COD_E68A2',
             'seat'          =>'2-2',
             'theater_id'   =>1,
             'user_id'       =>2,
@@ -47,7 +47,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'A2',
+            'code'          =>'COD_E68A2',
             'seat'          =>'2-5',
             'theater_id'   =>1,
             'user_id'       =>2,
@@ -55,7 +55,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'A2',
+            'code'          =>'COD_E68A2',
             'seat'          =>'2-6',
             'theater_id'   =>1,
             'user_id'       =>2,
@@ -63,7 +63,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'B1',
+            'code'          =>'COD_E68B1',
             'seat'          =>'2-2',
             'theater_id'   =>2,
             'user_id'       =>2,
@@ -71,7 +71,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'B2',
+            'code'          =>'COD_E68B2',
             'seat'          =>'2-3',
             'theater_id'   =>2,
             'user_id'       =>2,
@@ -79,7 +79,7 @@ class ReservationSeeder extends Seeder
         ]);
 
         DB::table('reservations')->insert([
-            'code'          =>'B3',
+            'code'          =>'COD_E68B3',
             'seat'          =>'2-4',
             'theater_id'   =>2,
             'user_id'       =>2,
