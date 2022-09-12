@@ -136,4 +136,12 @@ class UserController extends Controller
             return back()->with('error', $e->getMessage());;
         }
     }
+
+    public function active($id){
+
+        $user = User::findOrFail($id);
+        $user->update(['discharge_date'=>NULL]);
+
+        return back()->with('notification','registro activado correctamente');
+    }
 }

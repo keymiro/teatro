@@ -27,6 +27,7 @@ Route::middleware(['blocked'])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/theaters/{id}', [TheaterController::class, 'index'])->name('theaters.index');
+    Route::get('/users/{id}/active', [UserController::class,'active'])->name('users.active');
 
     Route::resource('users', UserController::class);
     Route::resource('reservations', ReservationController::class);
