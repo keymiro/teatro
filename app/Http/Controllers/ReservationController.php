@@ -33,16 +33,6 @@ class ReservationController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -78,16 +68,6 @@ class ReservationController extends Controller
 
             return back()->with('error', $e->getMessage());
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-
     }
 
     /**
@@ -159,8 +139,8 @@ class ReservationController extends Controller
     {
         try {
 
-            $user = Reservation::where('code',$id);
-            $user->delete();
+            $reservation = Reservation::where('code',$id);
+            $reservation->delete();
 
             return back()->with('notification','registro eliminado correctamente');
 
