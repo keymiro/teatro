@@ -26,7 +26,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservation = Reservation::where('user_id',auth()->user()->id)->get();
+        $reservation = Reservation::where('user_id', auth()->user()->id)->get();
         $reservations = $reservation->unique('code');
 
         return view('reservation.index')->with(compact('reservations'));
@@ -40,30 +40,28 @@ class ReservationController extends Controller
      */
     public function store(StoreReservationRequest $request)
     {
-        try{
+        try {
 
-           $seats        = $request->input('seat');
-           $theater_id   = $request->input('theater_id');
-           $code         = $this->generateCode(5);
-           $noRepeatSeat = $this->validationNoRepeatSeat($seats,$theater_id);
+            $seats        = $request->input('seat');
+            $theater_id   = $request->input('theater_id');
+            $code         = $this->generateCode(5);
+            $noRepeatSeat = $this->validationNoRepeatSeat($seats, $theater_id);
 
-           if($noRepeatSeat){
+            if ($noRepeatSeat) {
 
-                return back()->with('error', 'Las butacas: '.$noRepeatSeat.' ya estan reservadas');
-           }
+                return back()->with('error', 'Las butacas: ' . $noRepeatSeat . ' ya estan reservadas');
+            }
 
-            foreach ($seats as $key => $seat)
-            {
+            foreach ($seats as $key => $seat) {
                 Reservation::create([
-                    'code'      =>$code,
-                    'seat'      =>$seats[$key],
-                    'theater_id'=>$theater_id,
-                    'user_id'   =>auth()->user()->id,
+                    'code'      => $code,
+                    'seat'      => $seats[$key],
+                    'theater_id' => $theater_id,
+                    'user_id'   => auth()->user()->id,
                 ]);
             }
 
             return back()->with('notification', 'Registro guardado correctamente');
-
         } catch (Exception $e) {
 
             return back()->with('error', $e->getMessage());
@@ -77,13 +75,12 @@ class ReservationController extends Controller
      */
     public function edit($id)
     {
-        try{
+        try {
 
-             $reservations = Reservation::where('code',$id)->get();
-             $otherSeats = Reservation::where('code','!=',$id)->where('theater_id',$reservations[0]->theater_id)->get();
+            $reservations = Reservation::where('code', $id)->get();
+            $otherSeats = Reservation::where('code', '!=', $id)->where('theater_id', $reservations[0]->theater_id)->get();
 
-            return view('reservation.edit')->with(compact('reservations','otherSeats'));
-
+            return view('reservation.edit')->with(compact('reservations', 'otherSeats'));
         } catch (Exception $e) {
 
             return back()->with('error', $e->getMessage());;
@@ -96,38 +93,36 @@ class ReservationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreReservationRequest $request,$id)
+    public function update(StoreReservationRequest $request, $id)
     {
-        try{
+        try {
             $this->destroy($request->input('code'));
 
             $seats        = $request->input('seat');
             $theater_id   = $request->input('theater_id');
 
-            $noRepeatSeat = $this->validationNoRepeatSeat($seats,$theater_id);
+            $noRepeatSeat = $this->validationNoRepeatSeat($seats, $theater_id);
 
-           if($noRepeatSeat){
+            if ($noRepeatSeat) {
 
-                return back()->with('error', 'Las butacas: '.$noRepeatSeat.' ya estan reservadas');
-           }
+                return back()->with('error', 'Las butacas: ' . $noRepeatSeat . ' ya estan reservadas');
+            }
 
-            foreach ($seats as $key => $seat)
-            {
+            foreach ($seats as $key => $seat) {
 
                 Reservation::create([
-                    'code'      =>$request->input('code'),
-                    'seat'      =>$seats[$key],
-                    'theater_id'=>$theater_id,
-                    'user_id'   =>auth()->user()->id,
+                    'code'      => $request->input('code'),
+                    'seat'      => $seats[$key],
+                    'theater_id' => $theater_id,
+                    'user_id'   => auth()->user()->id,
                 ]);
             }
 
             return back()->with('notification', 'Registro actualizado correctamente');
+        } catch (Exception $e) {
 
-         } catch (Exception $e) {
-
-             return back()->with('error', $e->getMessage());
-         }
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -139,11 +134,10 @@ class ReservationController extends Controller
     {
         try {
 
-            $reservation = Reservation::where('code',$id);
+            $reservation = Reservation::where('code', $id);
             $reservation->delete();
 
-            return back()->with('notification','registro eliminado correctamente');
-
+            return back()->with('notification', 'registro eliminado correctamente');
         } catch (Exception $e) {
 
             return back()->with('error', $e->getMessage());;
@@ -154,35 +148,39 @@ class ReservationController extends Controller
      * Genera un código ramdon sin repetirse para la reserva
      *
      */
-    public function generateCode($longitud) {
+    public function generateCode($longitud)
+    {
 
         $key = '';
         $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
-        $max = strlen($pattern)-1;
+        $max = strlen($pattern) - 1;
 
-        for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+        for ($i = 0; $i < $longitud; $i++) {
+            $key .= $pattern[mt_rand(0, $max)];
+        }
 
-        return strtoupper('cod_'.$key);
+        return strtoupper('cod_' . $key);
     }
 
     /**
      * Valida que no puedan  repetir la misma butaca en una misma función
      *
      */
-    public function validationNoRepeatSeat(array $seats,$theater_id){
+    public function validationNoRepeatSeat(array $seats, $theater_id)
+    {
 
         $seatRepeat = [];
 
-        foreach ($seats as $key => $value) {
+        foreach ($seats as $numberSeat) {
             $reservation = Reservation::where([
-                                                ['theater_id', '=', $theater_id],
-                                                ['seat', '=', $seats[$key]],
-                                             ])->get();
+                ['theater_id', '=', $theater_id],
+                ['seat', '=', $numberSeat],
+            ])->get();
 
-                if (count($reservation)>0) {
+            if (count($reservation) > 0) {
 
-                    $seatRepeat[] = $seats[$key];
-                }
+                $seatRepeat[] = $numberSeat;
+            }
         }
 
         if (!empty($seatRepeat)) {
