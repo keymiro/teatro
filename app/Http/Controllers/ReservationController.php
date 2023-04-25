@@ -168,7 +168,6 @@ class ReservationController extends Controller
      */
     public function validationNoRepeatSeat(array $seats, $theater_id)
     {
-
         $seatRepeat = [];
 
         foreach ($seats as $numberSeat) {
@@ -184,10 +183,8 @@ class ReservationController extends Controller
         }
 
         if (!empty($seatRepeat)) {
-
             return implode(", ", $seatRepeat);
         }
-
         return false;
     }
 }
